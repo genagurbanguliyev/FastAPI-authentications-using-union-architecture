@@ -1,0 +1,20 @@
+# default:
+.idea/
+.vscode/
+.build/
+.cache/
+__pycache__/
+**/__pycache__/
+**/**/__pycache__/
+**/**/**/__pycache__/
+
+#poetry:
+poetry.lock
+
+# virtual environments:
+.env
+
+# Migrations:
+alembic.ini
+alembic/
+
