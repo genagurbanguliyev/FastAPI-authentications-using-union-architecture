@@ -9,7 +9,8 @@ __pycache__/
 **/**/**/__pycache__/
 
 # Static directory for uploading file
-/audio/
+/audio
+/audio/**
 
 #poetry:
 poetry.lock
