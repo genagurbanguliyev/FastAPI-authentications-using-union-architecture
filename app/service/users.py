@@ -8,6 +8,7 @@ class UserService:
 
     @staticmethod
     async def get_user_profile(username: str):
+        
         _username = await UsersRepo.find_by_username(username)
         if _username is None:
             raise HTTPException(

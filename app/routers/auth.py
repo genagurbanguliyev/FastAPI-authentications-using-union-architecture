@@ -16,11 +16,15 @@ router = APIRouter(
 
 @router.post("/registration", response_model=ResponseSchema, response_model_exclude_none=True)
 async def register(request_body: RegisterSchema):
+    # with hypercorn trio
+    # asyncio.run(AuthService.register_service(request_body))
+
+    # with uvicorn
     await AuthService.register_service(request_body)
     return ResponseSchema(detail="Successfully save data!")
 
 
 @router.post('/login', response_model=ResponseSchema)
 async def login(request_body: UserBaseSchema) -> Any:
-    token = asyncio.run(AuthService.login_service(request_body))
+    token = await AuthService.login_service(request_body)
     return ResponseSchema(detail="Successfully login", result={"token_type": "Bearer", "access_token": token})

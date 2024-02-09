@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from fastapi import Request, HTTPException
-from fastapi.security import HTTPBearer, OAuth2PasswordBearer, HTTPAuthorizationCredentials
+from fastapi import Request, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 
 from app.config import settings
@@ -58,18 +58,25 @@ class JWTBearer(HTTPBearer):
         super(JWTBearer, self).__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
-        credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
+        try:
+            credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
+        except HTTPException:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail={"status": "Unauthorized", "message": "Not authenticated!"})
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise HTTPException(
-                    status_code=403, detail={"status": "Forbidden", "message": "Invalid authentication schema."})
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                                    detail={"status": "Forbidden", "message": "Invalid authentication schema."})
             if not self.verify_jwt(credentials.credentials):
                 raise HTTPException(
-                    status_code=403, detail={"status": "Forbidden", "message": "Invalid token or expired token."})
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail={"status": "Forbidden", "message": "Invalid token or expired token."})
             return credentials.credentials
         else:
             raise HTTPException(
-                status_code=403, detail={"status": "Forbidden", "message": "Invalid authorization code."})
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={"status": "Forbidden", "message": "Invalid authorization code."})
 
     @staticmethod
     def verify_jwt(jwt_token: str):

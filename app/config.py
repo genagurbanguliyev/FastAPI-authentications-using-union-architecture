@@ -14,6 +14,15 @@ class Settings(BaseSettings):
     def DATABASE_URL(self) -> str:
         return f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
+    # @classmethod
+    # def make_dirs(cls):
+    #     print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+    #     if not os.path.exists("audio/en"):
+    #         print("--------------------------")
+    #         os.makedirs("audio")
+    #     if not os.path.exists("audio/ru"):
+    #         os.makedirs("audio/ru")
+
     model_config = SettingsConfigDict(env_file=".env")
 
 
